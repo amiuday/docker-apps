@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashen Academy - Hands-on Tech Training</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles to integrate the Inter font and ensure smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Style for the fixed navbar background on scroll */
+        .scrolled {
+            background-color: rgb(15 23 42 / 0.95);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <script>
+        // ... (All COURSES and REVIEWS data remains the same) ...
+        const COURSES = [
+            {
+                id: 'courses',
+                title: 'Mastering Linux Administration',
+                iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polyline points="4 17 9 22 20 11"/><line x1="12" y1="12" x2="16" y2="8"/><line x1="8" y1="8" x2="12" y2="4"/></svg>`,
+                description: 'From command line basics to advanced server hardening and management.',
+                image: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=800&q=80',
+                tags: ['Shell Scripting', 'System Admin', 'Bash']
+            },
+            {
+                id: 'python',
+                title: 'Python for Data & Automation',
+                iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`,
+                description: 'Learn Python fundamentals for scripting, data analysis, and web development.',
+                image: 'https://images.unsplash.com/photo-1526379095098-d400fd0bfb35?auto=format&fit=crop&w=800&q=80',
+                tags: ['Data Science', 'Web Scraping', 'Automation']
+            },
+            {
+                id: 'db',
+                title: 'Relational & NoSQL Databases',
+                iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg>`,
+                description: 'SQL mastery and an introduction to scalable NoSQL architecture like MongoDB.',
+                image: 'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&fit=crop&w=800&q=80',
+                tags: ['MySQL', 'PostgreSQL', 'MongoDB']
+            },
+            {
+                id: 'devops',
+                title: 'DevOps & Cloud Engineering',
+                iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M12 2a10 10 0 0 0-9.84 8H2v4h.16a10 10 0 1 0 0-4H2v-4h.16z"/></svg>`,
+                description: 'Essential tools for continuous integration, deployment, and cloud infrastructure.',
+                image: 'https://images.unsplash.com/photo-1667372393119-c81c0cda0563?auto=format&fit=crop&w=800&q=80',
+                tags: ['Docker', 'Kubernetes', 'CI/CD', 'AWS']
+            },
+            {
+                id: 'java',
+                title: 'Enterprise Java Development',
+                iconSvg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M6 11h2"/><path d="M16 11h2"/><path d="M12 11h.01"/></svg>`,
+                description: 'Build robust, large-scale backend systems using core Java and popular frameworks.',
+                image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80',
+                tags: ['Spring Boot', 'Microservices', 'API']
+            }
+        ];
+
+        const REVIEWS = [
+            { name: "Aisha Khan", role: "DevOps", text: "The project-based internship was crucial. I secured my first job by showing off the live project I deployed." },
+            { name: "Ravi Sharma", role: "Python Developer", text: "Dashen Academy focuses on real-world use cases, not just theory. Highly recommend the Python track." },
+            { name: "Lina Wong", role: "System Admin", text: "The Linux course gave me the confidence to manage enterprise servers. Excellent, practical content." }
+        ];
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const menuOpenIcon = document.getElementById('menu-open-icon');
+            const menuCloseIcon = document.getElementById('menu-close-icon');
+            
+            const isOpen = menu.classList.toggle('hidden');
+            menuOpenIcon.classList.toggle('hidden', !isOpen);
+            menuCloseIcon.classList.toggle('hidden', isOpen);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.getElementById('navbar');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('scrolled');
+                    navbar.classList.remove('bg-transparent', 'py-6');
+                } else {
+                    navbar.classList.remove('scrolled');
+                    navbar.classList.add('bg-transparent', 'py-6');
+                }
+            });
+
+            const coursesContainer = document.getElementById('courses-container');
+            if (coursesContainer) {
+                coursesContainer.innerHTML = COURSES.map(course => `
+                    <div class="group bg-white rounded-xl overflow-hidden border border-slate-100 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="h-48 overflow-hidden relative">
+                            <div class="absolute inset-0 bg-slate-900/30 group-hover:bg-slate-900/10 transition-all z-10"></div>
+                            <img 
+                                src="${course.image}" 
+                                alt="${course.title}" 
+                                class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500"
+                                onerror="this.onerror=null;this.src='https://placehold.co/800x400/1f2937/d1d5db?text=${course.title.replace(/\s/g, '+')}'"
+                            />
+                            <div class="absolute bottom-4 left-4 z-20 bg-white/90 backdrop-blur p-2 rounded-lg shadow-sm">
+                                ${course.iconSvg.replace('class="w-6 h-6"', 'class="w-6 h-6 text-slate-900"')}
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-xl font-bold text-slate-900 mb-3">${course.title}</h4>
+                            <p class="text-slate-600 mb-6 line-clamp-2">${course.description}</p>
+                            <div class="flex flex-wrap gap-2 mb-6">
+                                ${course.tags.map(tag => `<span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full">${tag}</span>`).join('')}
+                            </div>
+                            <button onclick="scrollToSection('contact')" class="w-full py-3 border border-indigo-600 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-600 hover:text-white transition-colors">
+                                View Detailed Syllabus
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            const reviewsContainer = document.getElementById('reviews-container');
+            if (reviewsContainer) {
+                reviewsContainer.innerHTML = REVIEWS.map(review => `
+                    <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-100 transition duration-300 hover:shadow-xl">
+                        <div class="flex gap-1 text-yellow-400 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="w-4 h-4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="w-4 h-4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="w-4 h-4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="w-4 h-4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="w-4 h-4"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <p class="text-slate-600 mb-6 italic">"${review.text}"</p>
+                        <div>
+                            <div class="font-bold text-slate-900">${review.name}</div>
+                            <div class="text-sm text-indigo-600">${review.role}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            const courseSelect = document.getElementById('contact-course-select');
+            if (courseSelect) {
+                COURSES.forEach(course => {
+                    const option = document.createElement('option');
+                    option.value = course.title;
+                    option.textContent = course.title;
+                    courseSelect.appendChild(option);
+                });
+            }
+        });
+    </script>
+
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-transparent py-6">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white w-6 h-6"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                </div>
+                <span class="text-2xl font-bold text-white tracking-tight">Dashen<span class="text-indigo-400">.</span>Academy</span>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-8">
+                <button onclick="scrollToSection('courses')" class="text-slate-300 hover:text-indigo-400 transition-colors text-sm font-medium uppercase tracking-wider">Courses</button>
+                <button onclick="scrollToSection('internship')" class="text-slate-300 hover:text-indigo-400 transition-colors text-sm font-medium uppercase tracking-wider">Internship</button>
+                <button onclick="scrollToSection('feedback')" class="text-slate-300 hover:text-indigo-400 transition-colors text-sm font-medium uppercase tracking-wider">Feedback</button>
+                <button onclick="scrollToSection('contact')" class="text-slate-300 hover:text-indigo-400 transition-colors text-sm font-medium uppercase tracking-wider">Contact</button>
+                <button onclick="scrollToSection('contact')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-full font-medium transition-all shadow-lg hover:shadow-indigo-500/25">
+                    Enroll Now
+                </button>
+            </div>
+
+            <div class="md:hidden">
+                <button onclick="toggleMobileMenu()" class="text-white">
+                    <svg id="menu-open-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                    <svg id="menu-close-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden w-6 h-6"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-t border-slate-800 absolute w-full">
+            <div class="px-4 pt-4 pb-6 space-y-2">
+                <button onclick="scrollToSection('courses'); toggleMobileMenu()" class="block w-full text-left text-slate-300 hover:text-white py-3 border-b border-slate-800">Courses</button>
+                <button onclick="scrollToSection('internship'); toggleMobileMenu()" class="block w-full text-left text-slate-300 hover:text-white py-3 border-b border-slate-800">Internship</button>
+                <button onclick="scrollToSection('feedback'); toggleMobileMenu()" class="block w-full text-left text-slate-300 hover:text-white py-3 border-b border-slate-800">Feedback</button>
+                <button onclick="scrollToSection('contact'); toggleMobileMenu()" class="block w-full text-left text-slate-300 hover:text-white py-3 border-b border-slate-800">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-slate-950">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-400 text-sm mb-6">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400 mr-2 animate-pulse"></span>
+                    Start Building Your Career
+                </div>
+                <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight mb-6">
+                    Hands-on Training in <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">Core Technologies</span>
+                </h1>
+                <p class="text-lg text-slate-400 mb-8 max-w-xl leading-relaxed">
+                    Dashen Academy offers specialized online courses in Linux, Python, DevOps, Java, and Databases, culminating in a mandatory project-based internship.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <button onclick="scrollToSection('courses')" class="bg-indigo-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-indigo-700 transition shadow-lg shadow-indigo-600/25">
+                        Explore Courses
+                    </button>
+                    <button onclick="scrollToSection('internship')" class="px-8 py-4 rounded-lg font-bold text-white border border-slate-700 hover:bg-slate-800 transition flex items-center justify-center">
+                        Project Internship 
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 w-4 h-4"><polyline points="9 18 15 12 9 6"/></svg>
+                    </button>
+                </div>
+                
+                <div class="mt-12 flex flex-wrap items-center gap-6 text-slate-500 text-sm font-medium">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-indigo-500 mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.71-8.58"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                        Project-Driven
+                    </div>
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-indigo-500 mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.71-8.58"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                        Small Batches
+                    </div>
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-indigo-500 mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.71-8.58"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                        Career Focused
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden md:block relative">
+                <div class="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-blue-500/20 rounded-2xl blur-xl"></div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl relative">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="space-y-3 font-mono text-sm">
+                        <div class="text-slate-500">// Dashen Academy Path</div>
+                        <div class="text-purple-400">const <span class="text-yellow-300">Student</span> = {</div>
+                        <div class="pl-4 text-white">name: <span class="text-green-400">'New Learner'</span>,</div>
+                        <div class="pl-4 text-white">goal: <span class="text-green-400">'Employment'</span>,</div>
+                        <div class="pl-4 text-white">skills: [<span class="text-blue-400">'Linux'</span>, <span class="text-blue-400">'DevOps'</span>, <span class="text-blue-400">'Java'</span>],</div>
+                        <div class="pl-4 text-white">start: <span class="text-yellow-300">new Date()</span>,</div>
+                        <div class="text-purple-400">};</div>
+                        <div class="pl-4 text-blue-300 mt-4">DashenAcademy.enroll(<span class="text-yellow-300">Student</span>);</div>
+                        <div class="animate-pulse mt-4 text-indigo-500">_</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="courses" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-sm font-bold text-indigo-600 uppercase tracking-wider mb-2">Our Curriculum</h2>
+                <h3 class="text-4xl font-bold text-slate-900">High-Demand Tech Tracks</h3>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">Focused training in the five foundational pillars of modern software and systems engineering.</p>
+            </div>
+
+            <div id="courses-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </div>
+    </section>
+
+    <section id="internship" class="py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-sm font-bold text-indigo-400 uppercase tracking-wider mb-2">Mandatory Online Internship</h2>
+                    <h3 class="text-4xl font-bold mb-6">Implement a Production-Ready Project</h3>
+                    <p class="text-slate-400 text-lg mb-8 leading-relaxed">
+                        Our internship is centered entirely around **project implementation**. You will work under mentorship to design, build, test, and deploy a complete system, transforming theoretical knowledge into practical expertise.
+                    </p>
+                    
+                    <div class="space-y-8">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><path d="M7 20h10"/><path d="M7 4h10"/><path d="M12 2v20"/></svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white">End-to-End Development</h4>
+                                <p class="mt-2 text-slate-400">Take a project from concept to a live deployment using industry-standard tools and practices.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white">Personalized Mentorship</h4>
+                                <p class="mt-2 text-slate-400">Receive weekly one-on-one sessions and continuous code review from senior engineers.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-teal-500 text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="M22 10v6m-2-6V6m2 4L12 2 2 10v6m20-6h-4m-4 0h-4m-4 0H2"/></svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-medium text-white">Portfolio Ready Asset</h4>
+                                <p class="mt-2 text-slate-400">Leave with a powerful, deployed project to showcase to potential employers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-indigo-600 to-blue-600 rounded-lg blur-lg opacity-50"></div>
+                    <img 
+                        src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1000&q=80" 
+                        alt="Interns collaborating on code" 
+                        class="relative rounded-lg shadow-2xl border border-slate-700"
+                        onerror="this.onerror=null;this.src='https://placehold.co/1000x600/1f2937/d1d5db?text=Project+Implementation'"
+                    />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="feedback" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center mb-12 text-slate-900">Success and Feedback</h2>
+            <div id="reviews-container" class="grid md:grid-cols-3 gap-8">
+                </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-slate-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+                
+                <div class="md:w-2/5 p-10 bg-indigo-600 text-white flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">Get Started Today</h3>
+                        <p class="text-indigo-100 mb-8">Ready to enroll or have detailed questions about our programs? Send us a message.</p>
+                        <div class="space-y-4 text-indigo-100">
+                            <div class="flex items-center">
+                                <div class="w-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                                </div> 
+                                admissions@dashen.edu
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                                </div>
+                                +1 (800) DSHN-TECH
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-12">
+                        <p class="text-sm text-indigo-200 font-medium">Small-group focus for maximum success.</p>
+                        <div class="flex gap-4 mt-4 opacity-75">
+                            <div class="w-8 h-8 bg-white/20 rounded-full"></div>
+                            <div class="w-8 h-8 bg-white/20 rounded-full"></div>
+                            <div class="w-8 h-8 bg-white/20 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:w-3/5 p-10 bg-white">
+                    <div id="contact-form-content">
+                        <form action="https://formsubmit.co/gagguturuudaykamalbabu@gmail.com" method="POST" class="space-y-6">
+                            
+                            <input type="hidden" name="_next" value="http://52.23.186.241/#contact" />
+                            <input type="hidden" name="_subject" value="New Dashen Academy Enquiry!" />
+                            
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
+                                <input type="text" name="Name" id="name" required class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition" placeholder="John Doe"/>
+                            </div>
+                            <div>
+                <label for="email" class="block text-sm font-medium text-slate-700 mb-2">Email Address (Gmail Only)</label>
+                <input 
+                    type="email" 
+                    name="Email" 
+                    id="email" 
+                    required 
+                    pattern="^.+@gmail\.com$" 
+                    title="Please use a Gmail address."
+                    class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition" 
+                    placeholder="john@gmail.com"
+                />
+            </div>
+
+            <div>
+                <label for="phone" class="block text-sm font-medium text-slate-700 mb-2">Phone Number (10 Digits)</label>
+                <input 
+                    type="tel" 
+                    name="Phone" 
+                    id="phone" 
+                    required 
+                    pattern="[0-9]{10}" 
+                    maxlength="10"
+                    title="Please enter a 10-digit phone number (digits only)."
+                    class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition" 
+                    placeholder="1234567890"
+                />
+            </div>
+                            <div>
+                                <label for="contact-course-select" class="block text-sm font-medium text-slate-700 mb-2">Interested Course/Program</label>
+                                <select name="Interested_Course" id="contact-course-select" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition">
+                                    <option value="Project Internship Only">Project Internship Program</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-slate-700 mb-2">Message/Query</label>
+                                <textarea name="Message" id="message" rows="3" class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition" placeholder="Tell us about your background or specific questions..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-4 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition shadow-lg flex items-center justify-center">
+                                Submit Enquiry
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-950 text-slate-400 py-12 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600 w-6 h-6"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span class="text-xl font-bold text-white">Dashen<span class="text-indigo-600">.</span>Academy</span>
+            </div>
+            <div class="flex space-x-8 text-sm">
+                <button onclick="scrollToSection('courses')" class="hover:text-white transition">Courses</button>
+                <button onclick="scrollToSection('internship')" class="hover:text-white transition">Internship</button>
+                <button onclick="scrollToSection('feedback')" class="hover:text-white transition">Feedback</button>
+            </div>
+            <div class="text-sm mt-4 md:mt-0">
+                &copy; 2025 Dashen Academy.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
